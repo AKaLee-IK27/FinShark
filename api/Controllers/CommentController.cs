@@ -18,9 +18,13 @@ public class CommentController : ControllerBase
         this.stockRepo = stockRepo;
     }
 
+    //* GET api/comment
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
         var comments = await commentRepo.GetAllAsync();
 
         var commentDto = comments.Select(c => c.ToCommentDto());
@@ -28,30 +32,33 @@ public class CommentController : ControllerBase
         return Ok(commentDto);
     }
 
-    [HttpGet("{id}")]
+    //* GET api/comment/{id}
+    [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
         var comment = await commentRepo.GetByIdAsync(id);
 
         if (comment == null)
-        {
             return NotFound("Comment not found");
-        }
 
         return Ok(comment.ToCommentDto());
     }
 
-    // POST api/comment/5
-    [HttpPost("{stockId}")]
+    //* POST api/comment/{stockId}
+    [HttpPost("{stockId:int}")]
     public async Task<IActionResult> Create(
         [FromRoute] int stockId,
         [FromBody] CreateCommentDto commentDto
     )
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
         if (!await stockRepo.StockExists(stockId))
-        {
             return BadRequest("Stock does not exist");
-        }
 
         var commentModel = commentDto.ToCommentFromCreateDTO(stockId);
         await commentRepo.CreateAsync(commentModel);
@@ -63,31 +70,34 @@ public class CommentController : ControllerBase
         );
     }
 
+    //* PUT api/comment/{id}
     [HttpPut]
-    [Route("{id}")]
+    [Route("{id:int}")]
     public async Task<IActionResult> Update(
         [FromRoute] int id,
         [FromBody] UpdateCommentDto updateDto
     )
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
         var comment = await commentRepo.UpdateAsync(id, updateDto.ToCommentFromUpdateDTO());
         if (comment == null)
-        {
             return NotFound("Comment not found");
-        }
 
         return Ok(comment.ToCommentDto());
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
         var comment = await commentRepo.DeleteAsync(id);
 
         if (comment == null)
-        {
             return NotFound("Comment not found");
-        }
 
         return NoContent();
     }
