@@ -11,16 +11,12 @@ namespace api.Controllers;
 
 [Route("api/stock")]
 [ApiController]
-public class StockController : ControllerBase
+public class StockController(IStockRepository stockRepo) : ControllerBase
 {
-    private readonly IStockRepository stockRepo;
-
-    public StockController(IStockRepository stockRepo)
-    {
-        this.stockRepo = stockRepo;
-    }
+    private readonly IStockRepository stockRepo = stockRepo;
 
     //* GET api/stock?symbol=ABC&companyName=Company&sortBy=Symbol&isSortDescending=true
+
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] StockQuery query)
     {
