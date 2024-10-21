@@ -36,7 +36,7 @@ public class StockController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        var stock = await context.Stocks.FirstOrDefaultAsync(s => s.Id == id);
+        var stock = await stockRepo.GetByIdAsync(id);
 
         if (stock == null)
         {
@@ -51,8 +51,7 @@ public class StockController : ControllerBase
     {
         var stockModel = stockDto.ToStockFromCreateDTO();
 
-        await context.Stocks.AddAsync(stockModel);
-        await context.SaveChangesAsync();
+        await stockRepo.CreateAsync(stockModel);
 
         return CreatedAtAction(
             nameof(GetById),
@@ -69,23 +68,14 @@ public class StockController : ControllerBase
         [FromBody] UpdateStockRequestDto updateDto
     )
     {
-        var stockModel = await context.Stocks.FirstOrDefaultAsync(s => s.Id == id);
+        var stockModel = await stockRepo.UpdateAsync(id, updateDto);
 
         if (stockModel == null)
         {
             return NotFound();
         }
 
-        stockModel.Symbol = updateDto.Symbol;
-        stockModel.CompanyName = updateDto.CompanyName;
-        stockModel.Purchase = updateDto.Purchase;
-        stockModel.LastDiv = updateDto.LastDiv;
-        stockModel.Industry = updateDto.Industry;
-        stockModel.MarketCap = updateDto.MarketCap;
-
-        context.SaveChanges();
-
-        return NoContent();
+        return Ok(stockModel.ToStockDto());
     }
 
     //* DELETE api/stock/{id}
@@ -93,15 +83,12 @@ public class StockController : ControllerBase
     [Route("{id}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
-        var stockModel = await context.Stocks.FirstOrDefaultAsync(s => s.Id == id);
+        var stockModel = await stockRepo.DeleteAsync(id);
 
         if (stockModel == null)
         {
             return NotFound();
         }
-
-        context.Stocks.Remove(stockModel);
-        await context.SaveChangesAsync();
 
         return NoContent();
     }
