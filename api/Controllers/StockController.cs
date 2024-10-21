@@ -1,4 +1,4 @@
-using api.DTOs.Stock;
+using api.Dtos.Stock;
 using api.Mappers;
 using api.Models;
 using FinShark.Data;
@@ -17,7 +17,7 @@ public class StockController : ControllerBase
         this.context = context;
     }
 
-    // GET api/stock
+    //* GET api/stock
     [HttpGet]
     public IActionResult GetAll()
     {
@@ -26,7 +26,7 @@ public class StockController : ControllerBase
         return Ok(stocks);
     }
 
-    // GET api/stock/{id}
+    //* GET api/stock/{id}
     [HttpGet("{id}")]
     public IActionResult GetById([FromRoute] int id)
     {
@@ -41,7 +41,7 @@ public class StockController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] CreateStockRequest stockDto)
+    public IActionResult Create([FromBody] CreateStockRequestDto stockDto)
     {
         var stockModel = stockDto.ToStockFromCreateDTO();
 
@@ -53,5 +53,47 @@ public class StockController : ControllerBase
             new { id = stockModel.Id },
             stockModel.ToStockDto()
         );
+    }
+
+    //* PUT api/stock/{id}
+    [HttpPut]
+    [Route("{id}")]
+    public IActionResult Update([FromRoute] int id, [FromBody] UpdateStockRequestDto updateDto)
+    {
+        var stockModel = context.Stocks.FirstOrDefault(s => s.Id == id);
+
+        if (stockModel == null)
+        {
+            return NotFound();
+        }
+
+        stockModel.Symbol = updateDto.Symbol;
+        stockModel.CompanyName = updateDto.CompanyName;
+        stockModel.Purchase = updateDto.Purchase;
+        stockModel.LastDiv = updateDto.LastDiv;
+        stockModel.Industry = updateDto.Industry;
+        stockModel.MarketCap = updateDto.MarketCap;
+
+        context.SaveChanges();
+
+        return NoContent();
+    }
+
+    //* DELETE api/stock/{id}
+    [HttpDelete]
+    [Route("{id}")]
+    public IActionResult Delete([FromRoute] int id)
+    {
+        var stockModel = context.Stocks.FirstOrDefault(s => s.Id == id);
+
+        if (stockModel == null)
+        {
+            return NotFound();
+        }
+
+        context.Stocks.Remove(stockModel);
+        context.SaveChanges();
+
+        return NoContent();
     }
 }

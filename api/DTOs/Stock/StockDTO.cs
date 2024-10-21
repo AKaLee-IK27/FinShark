@@ -1,6 +1,6 @@
-namespace api.DTOs.Stock;
+namespace api.Dtos.Stock;
 
-public class StockDTO
+public class StockDto
 {
     public int Id { get; set; }
     public string Symbol { get; set; } = string.Empty;

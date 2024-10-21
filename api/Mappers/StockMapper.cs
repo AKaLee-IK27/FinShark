@@ -1,13 +1,13 @@
-using api.DTOs.Stock;
+using api.Dtos.Stock;
 using api.Models;
 
 namespace api.Mappers;
 
 public static class StockMapper
 {
-    public static StockDTO ToStockDto(this Stock stockModel)
+    public static StockDto ToStockDto(this Stock stockModel)
     {
-        return new StockDTO
+        return new StockDto
         {
             Id = stockModel.Id,
             Symbol = stockModel.Symbol,
@@ -19,7 +19,7 @@ public static class StockMapper
         };
     }
 
-    public static Stock ToStockFromCreateDTO(this CreateStockRequest stockDto)
+    public static Stock ToStockFromCreateDTO(this CreateStockRequestDto stockDto)
     {
         return new Stock
         {
