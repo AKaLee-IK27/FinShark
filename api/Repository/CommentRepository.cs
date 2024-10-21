@@ -39,8 +39,20 @@ public class CommentRepository : ICommentRepository
         return commentModel;
     }
 
-    public Task<Comment?> UpdateAsync(int id, Comment commentModel)
+    public async Task<Comment?> UpdateAsync(int id, Comment commentModel)
     {
-        throw new NotImplementedException();
+        var existingComment = await context.Comments.FindAsync(id);
+
+        if (existingComment == null)
+        {
+            return null;
+        }
+
+        existingComment.Title = commentModel.Title;
+        existingComment.Content = commentModel.Content;
+
+        await context.SaveChangesAsync();
+
+        return existingComment;
     }
 }

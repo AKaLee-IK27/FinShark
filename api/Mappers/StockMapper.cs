@@ -32,4 +32,5 @@ public static class StockMapper
             MarketCap = stockDto.MarketCap,
         };
     }
+    
 }

@@ -35,7 +35,7 @@ public class CommentController : ControllerBase
 
         if (comment == null)
         {
-            return NotFound();
+            return NotFound("Comment not found");
         }
 
         return Ok(comment.ToCommentDto());
@@ -61,5 +61,21 @@ public class CommentController : ControllerBase
             new { id = commentModel.Id },
             commentModel.ToCommentDto()
         );
+    }
+
+    [HttpPut]
+    [Route("{id}")]
+    public async Task<IActionResult> Update(
+        [FromRoute] int id,
+        [FromBody] UpdateCommentDto updateDto
+    )
+    {
+        var comment = await commentRepo.UpdateAsync(id, updateDto.ToCommentFromUpdateDTO());
+        if (comment == null)
+        {
+            return NotFound("Comment not found");
+        }
+
+        return Ok(comment.ToCommentDto());
     }
 }

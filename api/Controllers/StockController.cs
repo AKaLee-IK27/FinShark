@@ -38,7 +38,7 @@ public class StockController : ControllerBase
 
         if (stock == null)
         {
-            return NotFound();
+            return NotFound("Stock not found");
         }
 
         return Ok(stock.ToStockDto());
@@ -67,7 +67,7 @@ public class StockController : ControllerBase
 
         if (stockModel == null)
         {
-            return NotFound();
+            return NotFound("Stock not found");
         }
 
         return Ok(stockModel.ToStockDto());
@@ -82,7 +82,7 @@ public class StockController : ControllerBase
 
         if (stockModel == null)
         {
-            return NotFound();
+            return NotFound("Stock not found");
         }
 
         return NoContent();
