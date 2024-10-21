@@ -1,4 +1,5 @@
 using api.Dtos.Stock;
+using api.Interfaces;
 using api.Mappers;
 using api.Models;
 using FinShark.Data;
@@ -12,17 +13,19 @@ namespace api.Controllers;
 public class StockController : ControllerBase
 {
     private readonly ApplicationDBContext context;
+    private readonly IStockRepository stockRepo;
 
-    public StockController(ApplicationDBContext context)
+    public StockController(ApplicationDBContext context, IStockRepository stockRepo)
     {
         this.context = context;
+        this.stockRepo = stockRepo;
     }
 
     //* GET api/stock
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var stocks = await context.Stocks.ToListAsync();
+        var stocks = await stockRepo.GetAllAsync();
 
         var stockDto = stocks.Select(s => s.ToStockDto());
 
@@ -33,7 +36,7 @@ public class StockController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        var stock = await context.Stocks.FindAsync(id);
+        var stock = await context.Stocks.FirstOrDefaultAsync(s => s.Id == id);
 
         if (stock == null)
         {

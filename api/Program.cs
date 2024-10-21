@@ -1,3 +1,5 @@
+using api.Interfaces;
+using api.Repository;
 using FinShark.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +15,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseSqlServer(connectionString)
 );
+
+builder.Services.AddScoped<IStockRepository, StockRepository>();
 
 var app = builder.Build();
 
