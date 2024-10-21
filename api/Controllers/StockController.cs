@@ -20,7 +20,7 @@ public class StockController : ControllerBase
         this.stockRepo = stockRepo;
     }
 
-    //* GET api/stock?symbol=ABC&companyName=Company
+    //* GET api/stock?symbol=ABC&companyName=Company&sortBy=Symbol&isSortDescending=true
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] StockQuery query)
     {
