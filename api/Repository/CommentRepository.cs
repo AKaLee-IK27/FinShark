@@ -22,6 +22,21 @@ public class CommentRepository : ICommentRepository
         return commentModel;
     }
 
+    public async Task<Comment?> DeleteAsync(int id)
+    {
+        var commentModel = await context.Comments.FindAsync(id);
+
+        if (commentModel == null)
+        {
+            return null;
+        }
+
+        context.Comments.Remove(commentModel);
+        await context.SaveChangesAsync();
+
+        return commentModel;
+    }
+
     public async Task<List<Comment>> GetAllAsync()
     {
         return await context.Comments.ToListAsync();
