@@ -45,7 +45,7 @@ public class StockController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateStockRequestDto stockDto)
+    public async Task<IActionResult> Create([FromBody] CreateStockDto stockDto)
     {
         var stockModel = stockDto.ToStockFromCreateDTO();
 
@@ -61,10 +61,7 @@ public class StockController : ControllerBase
     //* PUT api/stock/{id}
     [HttpPut]
     [Route("{id}")]
-    public async Task<IActionResult> Update(
-        [FromRoute] int id,
-        [FromBody] UpdateStockRequestDto updateDto
-    )
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] CreateStockDto updateDto)
     {
         var stockModel = await stockRepo.UpdateAsync(id, updateDto);
 
