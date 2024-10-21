@@ -3,6 +3,7 @@ using api.Mappers;
 using api.Models;
 using FinShark.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers;
 
@@ -19,18 +20,20 @@ public class StockController : ControllerBase
 
     //* GET api/stock
     [HttpGet]
-    public IActionResult GetAll()
+    public async Task<IActionResult> GetAll()
     {
-        var stocks = context.Stocks.ToList().Select(s => s.ToStockDto());
+        var stocks = await context.Stocks.ToListAsync();
+
+        var stockDto = stocks.Select(s => s.ToStockDto());
 
         return Ok(stocks);
     }
 
     //* GET api/stock/{id}
     [HttpGet("{id}")]
-    public IActionResult GetById([FromRoute] int id)
+    public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        var stock = context.Stocks.FirstOrDefault(s => s.Id == id);
+        var stock = await context.Stocks.FindAsync(id);
 
         if (stock == null)
         {
@@ -41,12 +44,12 @@ public class StockController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] CreateStockRequestDto stockDto)
+    public async Task<IActionResult> Create([FromBody] CreateStockRequestDto stockDto)
     {
         var stockModel = stockDto.ToStockFromCreateDTO();
 
-        context.Stocks.Add(stockModel);
-        context.SaveChanges();
+        await context.Stocks.AddAsync(stockModel);
+        await context.SaveChangesAsync();
 
         return CreatedAtAction(
             nameof(GetById),
@@ -58,9 +61,12 @@ public class StockController : ControllerBase
     //* PUT api/stock/{id}
     [HttpPut]
     [Route("{id}")]
-    public IActionResult Update([FromRoute] int id, [FromBody] UpdateStockRequestDto updateDto)
+    public async Task<IActionResult> Update(
+        [FromRoute] int id,
+        [FromBody] UpdateStockRequestDto updateDto
+    )
     {
-        var stockModel = context.Stocks.FirstOrDefault(s => s.Id == id);
+        var stockModel = await context.Stocks.FirstOrDefaultAsync(s => s.Id == id);
 
         if (stockModel == null)
         {
@@ -82,9 +88,9 @@ public class StockController : ControllerBase
     //* DELETE api/stock/{id}
     [HttpDelete]
     [Route("{id}")]
-    public IActionResult Delete([FromRoute] int id)
+    public async Task<IActionResult> Delete([FromRoute] int id)
     {
-        var stockModel = context.Stocks.FirstOrDefault(s => s.Id == id);
+        var stockModel = await context.Stocks.FirstOrDefaultAsync(s => s.Id == id);
 
         if (stockModel == null)
         {
@@ -92,7 +98,7 @@ public class StockController : ControllerBase
         }
 
         context.Stocks.Remove(stockModel);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
 
         return NoContent();
     }
