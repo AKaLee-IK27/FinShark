@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using api.Dtos.Stock;
 
 namespace api.Models;
 
