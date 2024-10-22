@@ -4,6 +4,7 @@ using api.Interfaces;
 using api.Mappers;
 using api.Models;
 using FinShark.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,7 @@ public class StockController(IStockRepository stockRepo) : ControllerBase
     //* GET api/stock?symbol=ABC&companyName=Company&sortBy=Symbol&isSortDescending=true
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetAll([FromQuery] StockQuery query)
     {
         if (!ModelState.IsValid)
