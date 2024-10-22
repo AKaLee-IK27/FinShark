@@ -4,6 +4,7 @@ using api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace api.Controllers;
 
@@ -21,17 +22,20 @@ public class PortfolioController(
 
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetUserPortfolio()
     {
         var username = User.GetUsername();
+        if (string.IsNullOrEmpty(username))
+            return Unauthorized($"Username '{username}' not found in claims.");
+
         var appUser = await userManager.FindByNameAsync(username);
 
         if (appUser == null)
-            return Unauthorized(username);
+            return Unauthorized($"User '{username}' not found.");
 
-        var userPortfolios = await portfolioRepo.GetUserPortfolioAsync(appUser);
+        var userPortfolio = await portfolioRepo.GetUserPortfolioAsync(appUser);
 
-        return Ok(userPortfolios);
+        return Ok(userPortfolio);
     }
 
     [HttpPost]
@@ -39,9 +43,12 @@ public class PortfolioController(
     public async Task<IActionResult> AddPortfolio(string symbol)
     {
         var username = User.GetUsername();
+        if (string.IsNullOrEmpty(username))
+            return Unauthorized($"Username '{username}' not found in claims.");
+
         var appUser = await userManager.FindByNameAsync(username);
         if (appUser == null)
-            return Unauthorized(username);
+            return Unauthorized($"User '{username}' not found.");
 
         var stock = await stockRepo.GetBySymbolAsync(symbol);
         if (stock == null)
@@ -57,6 +64,36 @@ public class PortfolioController(
         if (portfolioModel == null)
             return StatusCode(500, "Failed to add stock to portfolio");
 
-        return CreatedAtAction(nameof(GetAll), portfolioModel);
+        return Created();
+    }
+
+    [HttpDelete]
+    [Authorize]
+    public async Task<IActionResult> DeletePortfolio(string symbol)
+    {
+        var userName = User.GetUsername();
+        if (string.IsNullOrEmpty(userName))
+            return Unauthorized($"Username '{userName}' not found in claims.");
+
+        var appUser = await userManager.FindByNameAsync(userName);
+
+        if (appUser == null)
+            return Unauthorized($"User '{userName}' not found.");
+
+        var userPortfolio = await portfolioRepo.GetUserPortfolioAsync(appUser);
+
+        var filteredStock = userPortfolio
+            .Where(p => p.Symbol.ToLower() == symbol.ToLower())
+            .ToList();
+        if (filteredStock.Count() == 1)
+        {
+            await portfolioRepo.DeletePortfolioAsync(appUser, symbol);
+        }
+        else
+        {
+            return BadRequest("Stock not found in your portfolio");
+        }
+
+        return Ok();
     }
 }
