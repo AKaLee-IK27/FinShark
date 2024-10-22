@@ -27,9 +27,9 @@ public class StockController(IStockRepository stockRepo) : ControllerBase
 
         var stocks = await stockRepo.GetAllAsync(query);
 
-        var stockDto = stocks.Select(s => s.ToStockDto());
+        var stocksDto = stocks.Select(s => s.ToStockDto()).ToList();
 
-        return Ok(stocks);
+        return Ok(stocksDto);
     }
 
     //* GET api/stock/{id}

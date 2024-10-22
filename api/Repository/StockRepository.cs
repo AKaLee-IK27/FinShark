@@ -34,7 +34,9 @@ public class StockRepository(ApplicationDBContext context) : IStockRepository
 
     public async Task<List<Stock>> GetAllAsync(StockQuery query)
     {
-        var stocks = context.Stocks.Include(s => s.Comments).AsQueryable();
+        var stocks = context
+            .Stocks.Include(s => s.Comments)
+            .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(query.Symbol))
         {

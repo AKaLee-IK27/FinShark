@@ -13,7 +13,8 @@ public static class CommentMapper
             Title = commentModel.Title,
             Content = commentModel.Content,
             CreatedOn = commentModel.CreatedOn,
-            StockId = commentModel.StockId,
+            CreatedBy = commentModel.AppUser?.UserName ?? "Unknown",
+            StockId = commentModel.StockId
         };
     }
 
@@ -27,12 +28,6 @@ public static class CommentMapper
         };
     }
 
-    public static Comment ToCommentFromUpdateDTO(this UpdateCommentDto commentDto)
-    {
-        return new Comment
-        {
-            Title = commentDto.Title,
-            Content = commentDto.Content,
-        };
-    }
+    public static Comment ToCommentFromUpdateDTO(this UpdateCommentDto commentDto) =>
+        new Comment { Title = commentDto.Title, Content = commentDto.Content, };
 }

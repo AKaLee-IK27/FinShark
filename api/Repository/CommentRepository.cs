@@ -34,12 +34,14 @@ public class CommentRepository(ApplicationDBContext context) : ICommentRepositor
 
     public async Task<List<Comment>> GetAllAsync()
     {
-        return await context.Comments.ToListAsync();
+        return await context.Comments.Include(c => c.AppUser).ToListAsync();
     }
 
     public async Task<Comment?> GetByIdAsync(int id)
     {
-        var commentModel = await context.Comments.FindAsync(id);
+        var commentModel = await context
+            .Comments.Include(c => c.AppUser)
+            .FirstOrDefaultAsync(c => c.Id == id);
 
         if (commentModel == null)
         {
