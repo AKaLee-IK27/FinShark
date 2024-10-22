@@ -13,12 +13,14 @@ namespace api.Controllers;
 public class CommentController(
     ICommentRepository commentRepo,
     IStockRepository stockRepo,
-    UserManager<AppUser> userManager
+    UserManager<AppUser> userManager,
+    IFMPService fmpService
 ) : ControllerBase
 {
     private readonly ICommentRepository commentRepo = commentRepo;
     private readonly IStockRepository stockRepo = stockRepo;
     private readonly UserManager<AppUser> userManager = userManager;
+    private readonly IFMPService fmpService = fmpService;
 
     //* GET api/comment
 
@@ -51,17 +53,26 @@ public class CommentController(
     }
 
     //* POST api/comment/{stockId}
-    [HttpPost("{stockId:int}")]
+    [HttpPost("{symbol:alpha}")]
     public async Task<IActionResult> Create(
-        [FromRoute] int stockId,
+        [FromRoute] string symbol,
         [FromBody] CreateCommentDto commentDto
     )
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        if (!await stockRepo.StockExists(stockId))
-            return BadRequest("Stock does not exist");
+        var stock = await stockRepo.GetBySymbolAsync(symbol);
+        if (stock == null)
+        {
+            stock = await fmpService.FindStockBySymbolAsync(symbol);
+            if (stock == null)
+                return BadRequest("Stock does not exist");
+            else
+            {
+                await stockRepo.CreateAsync(stock);
+            }
+        }
 
         var userName = User.GetUsername();
         if (string.IsNullOrEmpty(userName))
@@ -71,7 +82,7 @@ public class CommentController(
         if (appUser == null)
             return Unauthorized("User not found");
 
-        var commentModel = commentDto.ToCommentFromCreateDTO(stockId);
+        var commentModel = commentDto.ToCommentFromCreateDTO(stock.Id);
         commentModel.AppUserId = appUser.Id;
         await commentRepo.CreateAsync(commentModel);
         return CreatedAtAction(

@@ -5,9 +5,8 @@ namespace api.Mappers;
 
 public static class StockMapper
 {
-    public static StockDto ToStockDto(this Stock stockModel)
-    {
-        return new StockDto
+    public static StockDto ToStockDto(this Stock stockModel) =>
+        new StockDto
         {
             Id = stockModel.Id,
             Symbol = stockModel.Symbol,
@@ -18,11 +17,9 @@ public static class StockMapper
             MarketCap = stockModel.MarketCap,
             Comments = stockModel.Comments.Select(c => c.ToCommentDto()).ToList()
         };
-    }
 
-    public static Stock ToStockFromCreateDTO(this CreateStockDto stockDto)
-    {
-        return new Stock
+    public static Stock ToStockFromCreateDTO(this CreateStockDto stockDto) =>
+        new Stock
         {
             Symbol = stockDto.Symbol,
             CompanyName = stockDto.CompanyName,
@@ -31,5 +28,15 @@ public static class StockMapper
             Industry = stockDto.Industry,
             MarketCap = stockDto.MarketCap
         };
-    }
+
+    public static Stock ToStockFromFMP(this FMPStock fmpStock) =>
+        new Stock
+        {
+            Symbol = fmpStock.symbol,
+            CompanyName = fmpStock.companyName,
+            Purchase = (decimal)fmpStock.price,
+            LastDiv = (decimal)fmpStock.lastDiv,
+            Industry = fmpStock.industry,
+            MarketCap = fmpStock.mktCap,
+        };
 }
