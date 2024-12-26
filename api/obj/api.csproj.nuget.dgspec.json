@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Workspace\\FinShark\\api\\api.csproj": {}
+    "D:\\Dev\\FinShark\\api\\api.csproj": {}
   },
   "projects": {
-    "D:\\Workspace\\FinShark\\api\\api.csproj": {
+    "D:\\Dev\\FinShark\\api\\api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Workspace\\FinShark\\api\\api.csproj",
+        "projectUniqueName": "D:\\Dev\\FinShark\\api\\api.csproj",
         "projectName": "api",
-        "projectPath": "D:\\Workspace\\FinShark\\api\\api.csproj",
-        "packagesPath": "C:\\Users\\khoalha\\.nuget\\packages\\",
-        "outputPath": "D:\\Workspace\\FinShark\\api\\obj\\",
+        "projectPath": "D:\\Dev\\FinShark\\api\\api.csproj",
+        "packagesPath": "C:\\Users\\khoil.ROWLET17\\.nuget\\packages\\",
+        "outputPath": "D:\\Dev\\FinShark\\api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\khoalha\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\khoil.ROWLET17\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

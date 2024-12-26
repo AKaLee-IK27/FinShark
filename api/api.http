@@ -1,6 +1,120 @@
-@api_HostAddress = http://localhost:5036
+@api_HostAddress = https://localhost:7083
 
 GET {{api_HostAddress}}/weatherforecast/
 Accept: application/json
+
+Get {{api_HostAddress}}/api/Stocks
+Accept: application/json
+###
+
+POST {{api_HostAddress}}/api/account/register
+Content-Type: application/json
+
+{
+  //RegisterDto
+}
+
+###
+
+GET {{api_HostAddress}}/api/comment
+
+###
+
+GET {{api_HostAddress}}/api/comment/{id:int}
+
+###
+
+DELETE {{api_HostAddress}}/api/comment/{id:int}
+
+###
+
+PUT {{api_HostAddress}}/api/comment/{id:int}
+Content-Type: application/json
+
+{
+  //UpdateCommentDto
+}
+
+###
+
+GET {{api_HostAddress}}/api/comment/{id}
+
+###
+
+DELETE {{api_HostAddress}}/api/comment/{id}
+
+###
+
+PUT {{api_HostAddress}}/api/comment/{id}
+Content-Type: application/json
+
+{
+  //UpdateCommentDto
+}
+
+###
+
+POST {{api_HostAddress}}/api/comment/{stockId:int}
+Content-Type: application/json
+
+{
+  //CreateCommentDto
+}
+
+###
+
+POST {{api_HostAddress}}/api/comment/{stockId}
+Content-Type: application/json
+
+{
+  //CreateCommentDto
+}
+
+###
+
+POST {{api_HostAddress}}/api/stock
+Content-Type: application/json
+
+{
+  //CreateStockDto
+}
+
+###
+
+GET {{api_HostAddress}}/api/stock
+
+###
+
+GET {{api_HostAddress}}/api/stock/{id:int}
+
+###
+
+DELETE {{api_HostAddress}}/api/stock/{id:int}
+
+###
+
+PUT {{api_HostAddress}}/api/stock/{id:int}
+Content-Type: application/json
+
+{
+  //CreateStockDto
+}
+
+###
+
+GET {{api_HostAddress}}/api/stock/{id}
+
+###
+
+DELETE {{api_HostAddress}}/api/stock/{id}
+
+###
+
+PUT {{api_HostAddress}}/api/stock/{id}
+Content-Type: application/json
+
+{
+  //CreateStockDto
+}
 
 ###
